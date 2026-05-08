@@ -1,0 +1,11 @@
+django>=4.2
+djangorestframework
+python-decouple
+torch
+transformers==4.40.1
+sentencepiece
+sacremoses
+simalign
+scipy
+numpy
+gunicorn

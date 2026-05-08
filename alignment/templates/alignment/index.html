@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+  <meta charset="UTF-8">
+  <title>NLP Lab — English↔Hindi Word Aligner</title>
+  <link rel="stylesheet" href="{% static 'alignment/style.css' %}">
+</head>
+<body>
+  <header>
+    <h1>🔤 NLP Lab</h1>
+    <p>English → Hindi Translation &amp; Word Alignment</p>
+  </header>
+
+  <main>
+    <section class="input-panel">
+      <label for="english-input">English Sentence</label>
+      <textarea id="english-input" rows="3"
+        placeholder="The teacher has been explaining the difficult lesson to the students..."></textarea>
+
+      <label for="hindi-input">Hindi (optional — leave blank to auto-translate)</label>
+      <textarea id="hindi-input" rows="3"
+        placeholder="Leave blank to auto-translate via NLLB-200"></textarea>
+
+      <button id="align-btn">Align ↔</button>
+      <span id="loading" class="hidden">⏳ Processing...</span>
+    </section>
+
+    <section class="result-panel hidden" id="result-panel">
+      <div class="sentence-display">
+        <div><strong>English:</strong> <span id="res-english"></span></div>
+        <div><strong>Hindi:</strong>   <span id="res-hindi"></span></div>
+        <div class="meta">Processed in <span id="res-time"></span>s</div>
+      </div>
+
+      <!-- Alignment Table -->
+      <h3>Word Alignments</h3>
+      <table id="alignment-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>English Word</th>
+            <th>Hindi Word(s)</th>
+            <th>Type</th>
+          </tr>
+        </thead>
+        <tbody id="alignment-body"></tbody>
+      </table>
+
+      <!-- Unaligned words -->
+      <div id="unaligned-box" class="hidden">
+        <strong>Unaligned Hindi words:</strong>
+        <span id="unaligned-words"></span>
+      </div>
+
+      <!-- Similarity Heatmap -->
+      <h3>Similarity Heatmap</h3>
+      <div id="heatmap-container">
+        <canvas id="heatmap-canvas"></canvas>
+      </div>
+
+      <!-- Download -->
+      <button id="download-btn">⬇ Download JSON</button>
+    </section>
+
+    <!-- Recent history -->
+    <section class="history-panel">
+      <h3>Recent Alignments</h3>
+      <ul id="history-list">
+        {% for r in recent %}
+        <li>
+          <span class="hist-en">{{ r.english_sentence|truncatechars:50 }}</span>
+          <span class="hist-hi">{{ r.hindi_sentence|truncatechars:40 }}</span>
+          <span class="hist-date">{{ r.created_at|date:"d M H:i" }}</span>
+        </li>
+        {% empty %}
+        <li>No history yet.</li>
+        {% endfor %}
+      </ul>
+    </section>
+  </main>
+
+  <script src="{% static 'alignment/main.js' %}"></script>
+</body>
+</html>
